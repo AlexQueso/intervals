@@ -16,7 +16,7 @@ public class Interval {
     }
 
     public boolean includeInterval(Interval interval) {
-        return this.min.isWithin(interval.min.value);
+        return this.min.isWithin(interval.min.value) && this.max.isWithin(interval.max.value);
     }
 
     @Override
