@@ -12,16 +12,19 @@ public class IntervalTest {
     private Point right = new Point(4.4);
     private IntervalBuilder intervalBuilder;
 
+    private IntervalFactory intervalFactory;
+
     @BeforeEach
     public void before() {
         this.left = new Point(-2.2);
         this.right = new Point(4.4);
         this.intervalBuilder = new IntervalBuilder();
+        this.intervalFactory = new IntervalFactory();
     }
 
     @Test
     public void givenIntervaOpenOpenlwhenIncludeWithIncludedValueThenTrue() {
-        Interval interval = this.intervalBuilder.open(left.getEquals()).open(right.getEquals()).build();
+        Interval interval = this.intervalFactory.getOpenInterval(left, right);
         assertFalse(interval.include(left.getLess()));
         assertFalse(interval.include(left.getEquals()));
         assertTrue(interval.include(left.getGreater()));
@@ -32,7 +35,7 @@ public class IntervalTest {
 
     @Test
     public void givenIntervaOpenOpenlwhenInc3ludeWithIncludedValueThenTrue() {
-        Interval interval = this.intervalBuilder.closed(left.getEquals()).open(right.getEquals()).build();
+        Interval interval = intervalFactory.getLeftClosedRightOpenInterval(left, right);
         assertFalse(interval.include(left.getLess()));
         assertTrue(interval.include(left.getEquals()));
         assertTrue(interval.include(left.getGreater()));
@@ -44,7 +47,7 @@ public class IntervalTest {
 
     @Test
     public void givenIntervaOpenOpenlwhenIncludeWit3hIncludedValueThenTrue() {
-        Interval interval = this.intervalBuilder.open(left.getEquals()).closed(right.getEquals()).build();
+        Interval interval = intervalFactory.getLeftOpenRightClosedInterval(left, right);
         assertFalse(interval.include(left.getLess()));
         assertFalse(interval.include(left.getEquals()));
         assertTrue(interval.include(left.getGreater()));
@@ -56,7 +59,7 @@ public class IntervalTest {
 
     @Test
     public void givenIntervaOpenOpenlwhenIncludeWithInclude5dValueThenTrue() {
-        Interval interval = this.intervalBuilder.closed(left.getEquals()).closed(right.getEquals()).build();
+        Interval interval = intervalFactory.getClosedInterval(left, right);
         assertFalse(interval.include(left.getLess()));
         assertTrue(interval.include(left.getEquals()));
         assertTrue(interval.include(left.getGreater()));
@@ -68,25 +71,22 @@ public class IntervalTest {
 
     @Test
     public void givenIntervalOpenWhenIncludeIntervalWithIncludedIntervalThenTrue() {
-        Interval cut = this.intervalBuilder.open(-10.0).open(10.0).build();
-        this.intervalBuilder = new IntervalBuilder();
-        Interval interval = this.intervalBuilder.open(-5.0).open(5.0).build();
-        assertTrue(cut.includeInterval(interval));
+        Interval interval = intervalFactory.getClosedInterval(left, right);
+        Interval includedInterval = intervalFactory.resetBuilder().getClosedIncludedInterval(left, right);
+        assertTrue(interval.includeInterval(includedInterval));
     }
 
     @Test
     public void givenIntervalOpenWhenIncludeIntervalWithLeftIntersectedIntervalThenFalse() {
-        Interval cut = this.intervalBuilder.open(-10.0).open(10.0).build();
-        this.intervalBuilder = new IntervalBuilder();
-        Interval interval = this.intervalBuilder.open(-15.0).open(-5.0).build();
-        assertFalse(cut.includeInterval(interval));
+        Interval interval = intervalFactory.getClosedInterval(left, right);
+        Interval intersectedInterval = intervalFactory.resetBuilder().getClosedLeftIntersectedInterval(left, right);
+        assertFalse(interval.includeInterval(intersectedInterval));
     }
 
     @Test
     public void givenIntervalOpenWhenIncludeIntervalWithRightIntersectedIntervalThenFalse() {
-        Interval cut = this.intervalBuilder.open(-10.0).open(10.0).build();
-        this.intervalBuilder = new IntervalBuilder();
-        Interval interval = this.intervalBuilder.open(5.0).open(15.0).build();
-        assertFalse(cut.includeInterval(interval));
+        Interval interval = intervalFactory.getClosedInterval(left, right);
+        Interval intersectedInterval = intervalFactory.resetBuilder().getClosedRightIntersectedInterval(left, right);
+        assertFalse(interval.includeInterval(intersectedInterval));
     }
 }
