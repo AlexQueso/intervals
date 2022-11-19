@@ -66,4 +66,11 @@ public class IntervalTest {
         assertFalse(interval.include(right.getGreater()));
     }
 
+    @Test
+    public void givenIntervalOpenWhenIncludeIntervalWithIncludedIntervalThenTrue() {
+        Interval cut = this.intervalBuilder.open(-10.0).open(10.0).build();
+        this.intervalBuilder = new IntervalBuilder();
+        Interval interval = this.intervalBuilder.open(-5.0).open(5.0).build();
+        assertTrue(cut.includeInterval(interval));
+    }
 }
