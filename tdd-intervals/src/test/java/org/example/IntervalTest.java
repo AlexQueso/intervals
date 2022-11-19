@@ -75,10 +75,18 @@ public class IntervalTest {
     }
 
     @Test
-    public void givenIntervalOpenWhenIncludeIntervalWithLeftIntervalThenFalse() {
+    public void givenIntervalOpenWhenIncludeIntervalWithLeftIntersectedIntervalThenFalse() {
         Interval cut = this.intervalBuilder.open(-10.0).open(10.0).build();
         this.intervalBuilder = new IntervalBuilder();
         Interval interval = this.intervalBuilder.open(-15.0).open(-5.0).build();
+        assertFalse(cut.includeInterval(interval));
+    }
+
+    @Test
+    public void givenIntervalOpenWhenIncludeIntervalWithRightIntersectedIntervalThenFalse() {
+        Interval cut = this.intervalBuilder.open(-10.0).open(10.0).build();
+        this.intervalBuilder = new IntervalBuilder();
+        Interval interval = this.intervalBuilder.open(5.0).open(15.0).build();
         assertFalse(cut.includeInterval(interval));
     }
 }
