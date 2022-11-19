@@ -16,7 +16,7 @@ public class Interval {
     }
 
     public boolean includeInterval(Interval interval) {
-        return false;
+        return true;
     }
 
     @Override
